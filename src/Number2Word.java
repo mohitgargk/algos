@@ -5,64 +5,61 @@ public class Number2Word {
 
     public static  void main(String[] args) {
         long input = 135377829210l;
-        System.out.println(toWords(input));
+        System.out.println(input + " " +toWords(input));
     }
 
-    private static enum denominations {
-        ONLY(0), THOUSAND(1), MILLION(2), BILLION(3), TRILLION(4), QUADRILLION(5);
+    private static String[] denominations = {
+        "ONLY", "THOUSAND", "MILLION", "BILLION", "TRILLION", "QUADRILLION" } ;
 
-        final int level;
+    private static String[] hunderedPlaces = {
+        "", "ONE", "TWO", "THREE","FOUR","FIVE","SIX","SEVEN","EIGHT","NINE" };
 
-        denominations(int val) {
-            this.level = val;
-        }
+    private static String[] tenPlaces = { // -1 means carry
+        "-1","-1","TWENTY", "THIRTY","FORTY","FIFTY","SIXTY","SEVENTY","EIGHTY","NINETY" };
 
-    }
-
-    private static enum places {
-        ONE(1), TWO(2), THREE(3), FOUR(4), FIVE(5), SIX(6), SEVEN(7), EIGHT(8), NINE(9), TEN(10), ;
-        final int num;
-        places(int val) {
-            num=val;
-        }
-    }
-
-    private static enum tenPlaces {
-        ONE(1), TWO(2), THREE(3), FOUR(4), FIVE(5), SIX(6), SEVEN(7), EIGHT(8), NINE(9);
-        final int num;
-        places(int val) {
-            num=val;
-        }
-    }
-
+    private static String[] onePlaces = {
+        "", "ONE", "TWO", "THREE","FOUR","FIVE","SIX","SEVEN","EIGHT","NINE", "TEN", "ELEVEN", "TWELVE", "THIRTEEN", "FORTEEN", "FIFTEEN", "SIXTEEN", "SEVENTEEN", "EIGHTEEN", "NINETEEN"  };
 
     public static String toWords(long n) {
+
         String out = "";
+        int level = 0;
 
-
-
+        while (n!=0) {
+            out = " " + toWords( n%1000, level) + out;
+            level++;
+            n = n/1000;
+        }
 
         return out;
     }
 
-    private static String toWords(int n, int level) {
-        String out = "";
+    private static String toWords(long n, int level) {
 
-
-
-
+        String out = " ";
+        out += " " + tripletToWords(n);
+        out += " " + denominations[level];
         return out;
 
     }
 
-    private static String toWords(int n) {
+    // Triplet
+    private static String tripletToWords(long n) {
         String out = "";
 
+        int msb = (int) n/100;
+        int midsb = (int) (n%100)/10;
+        int lsb = (int) n%10;
 
 
+        out += " " + hunderedPlaces[msb];
+        if(tenPlaces[midsb]!="-1")
+            out += " " + tenPlaces[midsb];
+        else
+            lsb += midsb*10;
+        out += " " + onePlaces[lsb];
 
         return out;
-
     }
 
 
